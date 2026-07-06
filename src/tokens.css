@@ -1,0 +1,63 @@
+/* Built From First Principles — design tokens.
+   Warm paper light sections, focused dark technical sections, one signature
+   accent (electric vermilion). Project color appears in lines and states. */
+
+:root {
+  /* Light manuscript */
+  --paper: #f3f0e8;
+  --paper-deep: #e9e4d4;
+  --paper-card: #faf8f1;
+  --ink: #11110f;
+  --ink-soft: #3a382f;
+  --ink-dim: #6a675f;
+  --ink-faint: rgba(17, 17, 15, 0.55);
+  --line: rgba(17, 17, 15, 0.14);
+  --line-strong: rgba(17, 17, 15, 0.3);
+
+  /* Dark technical */
+  --coal: #101311;
+  --coal-deep: #0b0d0c;
+  --coal-card: #171a18;
+  --ivory: #f3f0e8;
+  --ivory-dim: rgba(243, 240, 232, 0.66);
+  --ivory-faint: rgba(243, 240, 232, 0.45);
+  --coalline: rgba(243, 240, 232, 0.14);
+  --coalline-strong: rgba(243, 240, 232, 0.3);
+
+  /* Signature */
+  --vermilion: #ea4f35;
+  --vermilion-deep: #b93a26;
+  --vermilion-soft: rgba(234, 79, 53, 0.1);
+
+  /* Project identities */
+  --p-green: #1e6b41;
+  --p-green-bright: #46a06f;
+  --p-blue: #1f4fa8;
+  --p-blue-bright: #5b8dd9;
+  --p-orange: #c25a1d;
+  --p-orange-bright: #e08a3c;
+  --p-violet: #5b4391;
+  --p-violet-bright: #8f7cc4;
+
+  /* Type */
+  --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
+  --sans: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Consolas, monospace;
+
+  --fs-hero: clamp(2.6rem, 1.5rem + 5.5vw, 5rem);
+  --fs-section: clamp(1.8rem, 1.3rem + 2.6vw, 2.9rem);
+  --fs-title: clamp(1.5rem, 1.2rem + 1.6vw, 2.2rem);
+  --fs-body: clamp(0.95rem, 0.9rem + 0.25vw, 1.05rem);
+  --fs-small: clamp(0.8rem, 0.77rem + 0.18vw, 0.9rem);
+  --fs-micro: 0.7rem;
+
+  --ui-fast: 160ms ease-out;
+  --panel: 280ms cubic-bezier(0.22, 1, 0.36, 1);
+  --scene: 600ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  --radius-s: 4px;
+  --radius-m: 8px;
+  --maxw: 1180px;
+  --nav-h: 66px;
+  --focus: #0f5fd0;
+}
