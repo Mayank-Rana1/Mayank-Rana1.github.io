@@ -1,0 +1,16 @@
+{
+  "name": "Mayank Rana | Software Engineer",
+  "short_name": "Mayank Rana",
+  "description": "Portfolio of Mayank Rana — backend systems, machine learning, algorithms, and performance engineering.",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#17130F",
+  "theme_color": "#17130F",
+  "icons": [
+    {
+      "src": "./favicon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
