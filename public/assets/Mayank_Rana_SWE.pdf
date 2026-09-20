@@ -1,0 +1,115 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [3 0 R] /Count 1 >>
+endobj
+3 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 595 842] /Contents 4 0 R /Resources << /Font << /F1 5 0 R /F2 6 0 R >> >> >>
+endobj
+4 0 obj
+<< /Length 2213 >>
+stream
+BT
+/F2 22 Tf
+1 0 0 1 50 800 Tm
+(Mayank Rana) Tj
+/F1 12 Tf
+1 0 0 1 50 771 Tm
+(Software Engineer | CSE \(AI\), IIIT Bhopal) Tj
+/F1 11 Tf
+1 0 0 1 50 752 Tm
+(Bhopal, India | mrana171mr@gmail.com) Tj
+/F1 11 Tf
+1 0 0 1 50 734 Tm
+(github.com/Mayank-Rana1 | linkedin.com/in/mayank-rana17) Tj
+/F2 13 Tf
+1 0 0 1 50 708 Tm
+(SUMMARY) Tj
+/F1 11 Tf
+1 0 0 1 50 688 Tm
+(CSE \(AI\) undergraduate \(CGPA 8.1/10, expected May 2028\) focused on backend) Tj
+/F1 11 Tf
+1 0 0 1 50 670 Tm
+(systems, machine learning, algorithms, and performance engineering.) Tj
+/F2 13 Tf
+1 0 0 1 50 644 Tm
+(EXPERIENCE / PROJECTS) Tj
+/F1 11 Tf
+1 0 0 1 50 624 Tm
+(LLM Gateway Engine \(Python, FastAPI, AsyncIO, SSE\) - unified async gateway) Tj
+/F1 11 Tf
+1 0 0 1 50 606 Tm
+(across 3+ LLM providers with failover + circuit-breaking; -25% latency.) Tj
+/F1 11 Tf
+1 0 0 1 50 588 Tm
+(Digit Inference Engine \(NumPy, PyTorch, ONNX\) - NN from scratch to CNN,) Tj
+/F1 11 Tf
+1 0 0 1 50 570 Tm
+(~97% accuracy, 8-bit quant \(~900KB to ~225KB\), in-browser inference.) Tj
+/F1 11 Tf
+1 0 0 1 50 552 Tm
+(Square Dash \(C#, Unity, Android\) - endless runner, cloud leaderboards,) Tj
+/F1 11 Tf
+1 0 0 1 50 534 Tm
+(object pooling \(100+ entities/frame\), stable 60 FPS on budget devices.) Tj
+/F1 11 Tf
+1 0 0 1 50 516 Tm
+(Client-Side Web Tool Suite \(JS, Canvas\) - local-first 4K image tools;) Tj
+/F1 11 Tf
+1 0 0 1 50 498 Tm
+(40% faster build cycle. Live at all.html-5.me.) Tj
+/F2 13 Tf
+1 0 0 1 50 472 Tm
+(SKILLS) Tj
+/F1 11 Tf
+1 0 0 1 50 452 Tm
+(C, C++, Python, C#, SQL, JS | PyTorch, TF, NumPy, Pandas, ONNX) Tj
+/F1 11 Tf
+1 0 0 1 50 434 Tm
+(FastAPI, REST, AsyncIO, SSE | Git, Docker, GH Actions | GCP, Unity Cloud) Tj
+/F2 13 Tf
+1 0 0 1 50 408 Tm
+(ACHIEVEMENTS) Tj
+/F1 11 Tf
+1 0 0 1 50 388 Tm
+(800+ DSA problems | CodeChef 1624 | Codeforces 1324) Tj
+/F1 11 Tf
+1 0 0 1 50 370 Tm
+(CP Executive, Codame \(IIIT Bhopal\): OPTIGO inter-IIIT contest, 5000+) Tj
+/F1 11 Tf
+1 0 0 1 50 352 Tm
+(participants, 15+ authored problems, mentored 50+ juniors.) Tj
+/F2 13 Tf
+1 0 0 1 50 326 Tm
+(EDUCATION) Tj
+/F1 11 Tf
+1 0 0 1 50 306 Tm
+(B.Tech CSE \(AI\), IIIT Bhopal - CGPA 8.1/10 - Expected May 2028) Tj
+/F1 11 Tf
+1 0 0 1 50 288 Tm
+(Coursework: DSA, OOP, DBMS, OS, Computer Networks.) Tj
+ET
+endstream
+endobj
+5 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+6 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+xref
+0 7
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000115 00000 n 
+0000000251 00000 n 
+0000002515 00000 n 
+0000002585 00000 n 
+trailer
+<< /Size 7 /Root 1 0 R >>
+startxref
+2660
+%%EOF
