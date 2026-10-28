@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { projects } from '../data/portfolio';
 import { useScrollProgress } from '../lib/reveal';
 import { Tilt } from './motion';
 
@@ -16,7 +15,6 @@ type Dot = { x: number; y: number; vx: number; vy: number; r: number };
  * measured live, totals are the documented results.
  */
 export default function DashVisual({ reduced }: { reduced: boolean }) {
-  const project = projects[2];
   const { ref, progress } = useScrollProgress<HTMLDivElement>();
   const stage = reduced ? 1 : progress < 0.4 ? 0 : 1;
   const canvasRef = useRef<HTMLCanvasElement>(null);
@@ -177,7 +175,6 @@ export default function DashVisual({ reduced }: { reduced: boolean }) {
           </button>
         </div>
       </div>
-      <p className="presult" style={{ fontSize: '1rem' }}>{project.outcome}</p>
     </div>
   );
 }

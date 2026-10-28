@@ -1,12 +1,13 @@
-/* Built From First Principles — design tokens.
+/* Built From First Principles - design tokens.
    Warm paper light sections, focused dark technical sections, one signature
-   accent (electric vermilion). Project color appears in lines and states. */
+   accent (electric vermilion). Project color appears only in diagrams. */
 
 :root {
   /* Light manuscript */
   --paper: #f3f0e8;
   --paper-deep: #e9e4d4;
   --paper-card: #faf8f1;
+  --paper-glass: rgba(243, 240, 232, 0.82);
   --ink: #11110f;
   --ink-soft: #3a382f;
   --ink-dim: #6a675f;
@@ -39,25 +40,40 @@
   --p-violet: #5b4391;
   --p-violet-bright: #8f7cc4;
 
-  /* Type */
+  /* Type: two web families + system monospace for diagnostics only. */
   --serif: 'Newsreader', Georgia, 'Times New Roman', serif;
   --sans: 'DM Sans', system-ui, -apple-system, 'Segoe UI', sans-serif;
-  --mono: 'IBM Plex Mono', ui-monospace, 'SF Mono', Consolas, monospace;
+  --mono: ui-monospace, 'SF Mono', 'Cascadia Mono', Consolas, monospace;
 
-  --fs-hero: clamp(2.6rem, 1.5rem + 5.5vw, 5rem);
-  --fs-section: clamp(1.8rem, 1.3rem + 2.6vw, 2.9rem);
-  --fs-title: clamp(1.5rem, 1.2rem + 1.6vw, 2.2rem);
+  --fs-hero: clamp(2.7rem, 1.2rem + 4.6vw, 4.5rem);
+  --fs-section: clamp(2rem, 1.3rem + 3vw, 3.35rem);
+  --fs-title: clamp(1.7rem, 1.25rem + 2vw, 2.5rem);
   --fs-body: clamp(0.95rem, 0.9rem + 0.25vw, 1.05rem);
   --fs-small: clamp(0.8rem, 0.77rem + 0.18vw, 0.9rem);
   --fs-micro: 0.7rem;
 
-  --ui-fast: 160ms ease-out;
-  --panel: 280ms cubic-bezier(0.22, 1, 0.36, 1);
-  --scene: 600ms cubic-bezier(0.22, 1, 0.36, 1);
+  --ui-fast: 200ms cubic-bezier(0.22, 1, 0.36, 1);
+  --panel: 320ms cubic-bezier(0.22, 1, 0.36, 1);
+  --scene: 700ms cubic-bezier(0.22, 1, 0.36, 1);
+
+  /* 8pt-based layout scale */
+  --s1: 8px;
+  --s2: 16px;
+  --s3: 24px;
+  --s4: 32px;
+  --s5: 40px;
+  --s6: 48px;
+  --s7: 64px;
+  --s8: 96px;
+  --gutter: clamp(18px, 4vw, 40px);
+  --section-y: clamp(72px, 11vh, 128px);
 
   --radius-s: 4px;
-  --radius-m: 8px;
-  --maxw: 1180px;
-  --nav-h: 66px;
-  --focus: #0f5fd0;
+  --radius-m: 10px;
+  --radius-l: 14px;
+  --maxw: 1200px;
+  --nav-h: 64px;
+  --focus: #b93a26;
+  --shadow-soft: 0 8px 32px rgba(17, 17, 15, 0.08);
+  --shadow-lift: 0 16px 48px rgba(17, 17, 15, 0.12);
 }

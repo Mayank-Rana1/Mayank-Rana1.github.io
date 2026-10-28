@@ -4,13 +4,18 @@
   "description": "Portfolio of Mayank Rana — backend systems, machine learning, algorithms, and performance engineering.",
   "start_url": "./",
   "display": "standalone",
-  "background_color": "#17130F",
-  "theme_color": "#17130F",
+  "background_color": "#F3F0E8",
+  "theme_color": "#F3F0E8",
   "icons": [
     {
       "src": "./favicon.svg",
       "sizes": "any",
       "type": "image/svg+xml"
+    },
+    {
+      "src": "./apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
     }
   ]
 }

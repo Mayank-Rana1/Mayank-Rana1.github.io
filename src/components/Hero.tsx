@@ -1,7 +1,7 @@
 ﻿import { useMemo } from 'react';
 import { profile } from '../data/portfolio';
 import { IconFile } from './icons';
-import { Magnetic, Scramble } from './motion';
+import { Magnetic, Parallax, Scramble } from './motion';
 import { useInView, useScrollProgress } from '../lib/reveal';
 
 const N = 28;
@@ -51,33 +51,50 @@ function SignatureLine({ reduced }: { reduced: boolean }) {
     const fr = f - i0;
     const a = stagePoints(i0);
     const b = stagePoints(i0 + 1);
-    const pts = a.map((pt, i) => `${(pt.x + (b[i].x - pt.x) * fr).toFixed(1)},${(pt.y + (b[i].y - pt.y) * fr).toFixed(1)}`);
+    const pts = a.map(
+      (pt, i) =>
+        `${(pt.x + (b[i].x - pt.x) * fr).toFixed(1)},${(pt.y + (b[i].y - pt.y) * fr).toFixed(1)}`
+    );
     return {
       poly: pts.join(' '),
       path: 'M' + pts.map((s) => s.replace(',', ' ')).join(' L'),
+      stage: Math.round(f),
       label: STAGE_LABELS[Math.round(f)] ?? STAGE_LABELS[0],
     };
   }, [progress, reduced]);
 
   return (
     <div ref={ref} className="hero-line" aria-hidden="true">
-      <svg viewBox="0 0 640 240" role="presentation">
+      <svg viewBox="0 0 640 236" role="presentation">
+        <g stroke="var(--line-strong)" strokeWidth="1" opacity="0.42">
+          <path d="M20 214 H620" strokeDasharray="2 6" />
+          <path d="M20 34 V214 M170 208 V214 M320 208 V214 M470 208 V214 M620 208 V214" />
+        </g>
         <polyline
           points={d.poly}
           fill="none"
-          stroke="var(--vermilion)"
-          strokeWidth="2.5"
-          strokeLinejoin="round"
-          strokeLinecap="round"
+          stroke="var(--ink)"
+          strokeWidth="1"
+          opacity="0.16"
+          transform="translate(0,30)"
         />
         <polyline
           points={d.poly}
           fill="none"
           stroke="var(--ink)"
           strokeWidth="1"
-          opacity="0.25"
-          transform="translate(0,14)"
+          opacity="0.28"
+          transform="translate(0,15)"
         />
+        <polyline
+          points={d.poly}
+          fill="none"
+          stroke="var(--vermilion)"
+          strokeWidth="3"
+          strokeLinejoin="round"
+          strokeLinecap="round"
+        />
+        <circle cx={X0} cy={stagePoints(d.stage)[0].y} r="3.5" fill="var(--vermilion-deep)" />
         {!reduced ? (
           <circle r="5" fill="var(--vermilion-deep)">
             <animateMotion dur="7s" repeatCount="indefinite" path={d.path} />
@@ -88,24 +105,40 @@ function SignatureLine({ reduced }: { reduced: boolean }) {
         <span>FIG. 00 &mdash; FIRST PRINCIPLES</span>
         <span>{d.label}</span>
       </div>
+      <div className="hero-legend">
+        {STAGE_LABELS.map((label, i) => (
+          <span key={label} data-on={i === d.stage}>
+            {String(i + 1).padStart(2, '0')} {label}
+          </span>
+        ))}
+      </div>
     </div>
   );
 }
 
 /**
  * Hero: enormous typographic statement, no floating objects.
- * Masked line reveals; the signature line carries the motion.
+ * Masked line reveals; the signature line carries the scroll motion.
  */
 export default function Hero({ reduced }: { reduced: boolean }) {
   const { ref, visible } = useInView<HTMLDivElement>(0.2);
   return (
     <section className="hero" aria-labelledby="hero-title" id="top">
       <div className="wrap hero-grid" ref={ref}>
-        <div>
-          <p className="hero-kicker"><Scramble text="PORTFOLIO  — MAYANK RANA" /></p>
+        <div className="hero-copy">
+          <p className="hero-kicker">
+            <Scramble text={'PORTFOLIO \u2014 MAYANK RANA'} />
+          </p>
           <h1 id="hero-title" className="hero-title">
-            <span className={`rv${visible ? ' in' : ''}`}><span className="rv-in">I turn <em>first principles</em></span></span>
-            <span className={`rv${visible ? ' in' : ''}`}><span className="rv-in">into working systems.</span></span>
+            <span className={`rv${visible ? ' in' : ''}`} style={{ '--rd': '0ms' } as React.CSSProperties}>
+              <span className="rv-in">I turn</span>
+            </span>
+            <span className={`rv${visible ? ' in' : ''}`} style={{ '--rd': '90ms' } as React.CSSProperties}>
+              <span className="rv-in"><em>first principles</em></span>
+            </span>
+            <span className={`rv${visible ? ' in' : ''}`} style={{ '--rd': '180ms' } as React.CSSProperties}>
+              <span className="rv-in">into working systems.</span>
+            </span>
           </h1>
           <p className="hero-sub">
             Software engineer and CSE (AI) undergraduate at IIIT Bhopal, building backend
@@ -124,9 +157,16 @@ export default function Hero({ reduced }: { reduced: boolean }) {
             Open to software engineering internships
           </p>
         </div>
-        <SignatureLine reduced={reduced} />
+        <div className="hero-visual">
+          <Parallax distance={26} scale={0.012}>
+            <SignatureLine reduced={reduced} />
+          </Parallax>
+        </div>
+      </div>
+      <div className="hero-foot" aria-hidden="true">
+        <span className="hero-scroll"><i /> SCROLL TO TRACE THE SYSTEM</span>
+        <span>25.3176 N / 82.9739 E &middot; BHOPAL, IN</span>
       </div>
     </section>
   );
 }
-

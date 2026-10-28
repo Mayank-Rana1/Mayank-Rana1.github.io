@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { projects } from '../data/portfolio';
+import { useInView } from '../lib/reveal';
 
 /**
  * Fast-scan project index: hovering a row dims the rest and pins a small
@@ -58,6 +59,7 @@ export default function WorkIndex() {
   const [active, setActive] = useState<number | null>(null);
   const [pos, setPos] = useState({ x: 0, y: 0 });
   const wrap = useRef<HTMLDivElement>(null);
+  const { ref: inRef, visible } = useInView<HTMLDivElement>(0.18);
   const fine =
     typeof window !== 'undefined' &&
     window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -66,22 +68,28 @@ export default function WorkIndex() {
     if (!fine) return;
     const r = wrap.current?.getBoundingClientRect();
     if (!r) return;
+    const maxX = Math.max(12, r.width - 264);
+    const maxY = Math.max(8, r.height - 156);
     setActive(i);
-    setPos({ x: e.clientX - r.left, y: e.clientY - r.top });
+    setPos({
+      x: Math.min(Math.max(12, e.clientX - r.left + 24), maxX),
+      y: Math.min(Math.max(8, e.clientY - r.top - 70), maxY),
+    });
   };
 
   return (
-    <div className="wrap">
+    <div className="wrap" ref={inRef}>
       <div
         ref={wrap}
         className="work-index"
         data-active={active === null ? 'none' : active}
+        data-in={visible}
         onPointerLeave={() => setActive(null)}
       >
-        <p className="eyebrow">Selected work — index</p>
+        <p className="eyebrow">Selected work &mdash; index</p>
         <ul>
           {projects.map((p, i) => (
-            <li key={p.no} data-dim={active !== null && active !== i}>
+            <li key={p.no} data-dim={active !== null && active !== i} style={{ '--rd': `${i * 70}ms` } as React.CSSProperties}>
               <a
                 href={`#${p.hash}`}
                 onPointerMove={(e) => onMove(e, i)}
@@ -100,7 +108,7 @@ export default function WorkIndex() {
           <div
             className="wi-preview"
             aria-hidden="true"
-            style={{ transform: `translate(${pos.x + 24}px, ${pos.y - 70}px)` }}
+            style={{ transform: `translate(${pos.x}px, ${pos.y}px)` }}
           >
             <Preview index={active} />
           </div>

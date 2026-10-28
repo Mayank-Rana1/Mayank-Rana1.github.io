@@ -16,14 +16,19 @@ import Journey from './components/Journey';
 import Contact from './components/Contact';
 import { projects } from './data/portfolio';
 import { useMotionPreference } from './lib/motion';
+import { initSmoothScroll, scrollToHash } from './lib/smooth';
 
 /**
  * Built From First Principles: a normal scrolling portfolio.
- * Thought → Structure → System → Result, one evolving visual idea.
+ * Thought -> Structure -> System -> Result, one evolving visual idea.
  */
 export default function App() {
   const { pref } = useMotionPreference();
   const reduced = pref === 'reduced';
+
+  // One scroll engine for the whole document. It is destroyed under
+  // reduced motion so the browser's native scrolling is untouched.
+  useEffect(() => initSmoothScroll(reduced), [reduced]);
 
   const visuals = [
     <GatewayVisual key="v0" reduced={reduced} />,
@@ -34,18 +39,23 @@ export default function App() {
   const dark = [false, true, false, true];
 
   // Deep links on first load: the browser scrolls before React mounts
-  // anything, so anchor targets don't exist yet — scroll manually once.
+  // anything, so anchor targets don't exist yet - scroll manually once
+  // the fonts (and therefore the layout) have settled.
   useEffect(() => {
-    try {
-      const el = window.location.hash
-        ? document.querySelector(window.location.hash)
-        : null;
-      if (el) {
-        el.scrollIntoView({ block: 'start', behavior: 'instant' as ScrollBehavior });
-      }
-    } catch {
-      /* ignore */
-    }
+    const hash = window.location.hash;
+    if (!hash) return;
+    let cancelled = false;
+    const go = () => {
+      if (!cancelled) scrollToHash(hash, true);
+    };
+    const id = window.setTimeout(() => {
+      const fonts = document.fonts?.ready ?? Promise.resolve();
+      fonts.then(() => requestAnimationFrame(() => requestAnimationFrame(go))).catch(go);
+    }, 40);
+    return () => {
+      cancelled = true;
+      window.clearTimeout(id);
+    };
   }, []);
 
   return (
@@ -56,7 +66,7 @@ export default function App() {
       <Nav />
       <main>
         <Hero reduced={reduced} />
-        <ProofStrip />
+        <ProofStrip reduced={reduced} />
         <div id="work" style={{ scrollMarginTop: 'calc(var(--nav-h) + 8px)' }}>
           <WorkIndex />
           {projects.map((p, i) => (
@@ -71,13 +81,14 @@ export default function App() {
             />
           ))}
         </div>
-        <StatementStrip />
+        <StatementStrip reduced={reduced} />
         <SkillsIndex />
         <About />
         <Journey />
         <Marquee label="WORKING SET" />
         <Contact />
       </main>
+      <div className="grain" aria-hidden="true" />
     </div>
   );
 }

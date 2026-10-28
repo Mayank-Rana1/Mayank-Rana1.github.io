@@ -64,21 +64,22 @@ function Symbol({ index }: { index: number }) {
 }
 
 export default function SkillsIndex() {
-  const { ref, visible } = useInView<HTMLDivElement>(0.2);
+  const { ref: headRef, visible } = useInView<HTMLDivElement>(0.25);
+  const { ref: rowsRef, visible: rowsIn } = useInView<HTMLDivElement>(0.15);
   return (
-    <section id="capabilities" className="skills-sec" aria-labelledby="skills-title" style={{ padding: 'clamp(64px, 11vh, 130px) 0' }}>
-      <div className="wrap">
+    <section id="capabilities" className="skills-sec" aria-labelledby="skills-title" style={{ padding: 'var(--section-y) 0' }}>
+      <div className="wrap" ref={headRef}>
         <div className="section-head">
           <p className="eyebrow">Capabilities</p>
           <h2 id="skills-title">
             <span className={`rv${visible ? ' in' : ''}`}><span className="rv-in">A technical index,</span></span>
-            <span className={`rv${visible ? ' in' : ''}`}><span className="rv-in">not a sticker wall.</span></span>
+            <span className={`rv${visible ? ' in' : ''}`} style={{ '--rd': '80ms' } as React.CSSProperties}><span className="rv-in">not a sticker wall.</span></span>
           </h2>
           <p className="lead">Five groups, each earning its symbol as it enters the viewport.</p>
         </div>
-        <div ref={ref} className={`draw${visible ? ' in' : ''}`} style={{ marginTop: 18 }}>
+        <div ref={rowsRef} className={`draw stag${rowsIn ? ' in' : ''}`} style={{ marginTop: 18 }}>
           {skills.map((s, i) => (
-            <div className="skill-row" key={s.group}>
+            <div className="skill-row" key={s.group} style={{ '--rd': `${i * 55}ms` } as React.CSSProperties}>
               <span className="sno">0{i + 1}</span>
               <span className="sname">{s.group.toUpperCase()}</span>
               <span className="sitems">{s.items.join(' \u00b7 ')}</span>

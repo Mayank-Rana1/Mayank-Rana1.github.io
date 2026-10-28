@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from 'react';
-import { projects } from '../data/portfolio';
 import { useScrollProgress } from '../lib/reveal';
 import { Tilt } from './motion';
 
@@ -12,7 +11,6 @@ type LogLine = { ms: number; text: string; kind?: 'err' | 'ok' };
  * replay it. Reduced motion: static polished route, manual replay only.
  */
 export default function GatewayVisual({ reduced }: { reduced: boolean }) {
-  const project = projects[0];
   const { ref, progress } = useScrollProgress<HTMLDivElement>();
   const stage = reduced ? 1 : progress < 0.4 ? 0 : progress < 0.78 ? 1 : 2;
   const [phase, setPhase] = useState<'idle' | 'running' | 'failed'>('idle');
@@ -71,7 +69,6 @@ export default function GatewayVisual({ reduced }: { reduced: boolean }) {
   }, [stage]);
 
   const failed = phase !== 'idle';
-  const failedDone = phase === 'failed';
 
   return (
     <div ref={ref}>
@@ -104,13 +101,13 @@ export default function GatewayVisual({ reduced }: { reduced: boolean }) {
         </div>
       </div>
       </Tilt>
-      <div className="diagline" style={{ marginTop: 12 }}>        <div><span className="k">CIRCUIT </span><span className={failed ? 'err' : 'ok'}>{failed ? 'OPEN' : 'CLOSED'}</span>
+      <div className="diagline gw-log" style={{ marginTop: 12 }}>
+        <div><span className="k">CIRCUIT </span><span className={failed ? 'err' : 'ok'}>{failed ? 'OPEN' : 'CLOSED'}</span>
         {failoverMs !== null ? <span> · FAILOVER IN {failoverMs}MS</span> : null}</div>
         {log.slice(-3).map((l, i) => (
           <div key={i}><span className="k">t+{l.ms}ms </span><span className={l.kind ?? ''}>{l.text}</span></div>
         ))}
       </div>
-      {failedDone ? <p className="presult" style={{ fontSize: '1rem' }}>{project.outcome}</p> : null}
       <div className="demo-row">
         <button type="button" className="dbtn" style={{ '--pcc': 'var(--p-green)' } as React.CSSProperties} disabled={phase === 'running'} onClick={run}>
           {phase === 'idle' ? 'SIMULATE PROVIDER FAILURE' : phase === 'failed' ? 'REPLAY FAILOVER' : 'RUNNING…'}

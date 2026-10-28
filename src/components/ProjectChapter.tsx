@@ -1,7 +1,9 @@
 import { useEffect, useRef, useState } from 'react';
 import type { Project } from '../data/portfolio';
 import { IconExternal, IconGithub, IconPlus } from './icons';
+import { Parallax } from './motion';
 import { useInView } from '../lib/reveal';
+import { scrollToElement } from '../lib/smooth';
 
 export type Accent = { color: string; bright: string; dim: string; soft: string };
 
@@ -43,7 +45,7 @@ export default function ProjectChapter(props: {
     if (open) {
       // Keep the chapter title on screen when the study unfolds.
       const t = window.setTimeout(() => {
-        caseRef.current?.scrollIntoView({ block: 'nearest', behavior: reduced ? 'auto' : 'smooth' });
+        if (caseRef.current) scrollToElement(caseRef.current, { immediate: reduced });
       }, 120);
       return () => window.clearTimeout(t);
     }
@@ -54,13 +56,14 @@ export default function ProjectChapter(props: {
     <section
       ref={ref}
       id={p.hash}
+      data-no={p.no}
       className={`chapter${dark ? ' dark' : ''}`}
       aria-labelledby={`${p.hash}-title`}
       style={{ '--pcc': accent.color } as React.CSSProperties}
     >
       <div className="wrap">
         <div className={`proj-grid${flip ? ' flip' : ''}`}>
-          <div className="proj-copy">
+          <div className="proj-copy" data-in={visible}>
             <p className="pnum-row">
               <span className="pnum">PROJECT {p.no}</span>
               <span className="pcat">{p.category}</span>
@@ -97,7 +100,9 @@ export default function ProjectChapter(props: {
               {open ? 'Collapse case study' : 'Expand case study'} <IconPlus size={15} />
             </button>
           </div>
-          <div className="proj-visual">{props.visual}</div>
+          <Parallax className="proj-visual" distance={18} scale={0.018}>
+            {props.visual}
+          </Parallax>
         </div>
         <div ref={caseRef} id={`${p.hash}-case`} className="case-study" data-open={open}>
           <div>

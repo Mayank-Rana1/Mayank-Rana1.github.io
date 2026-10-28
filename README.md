@@ -9,11 +9,13 @@ One visual story runs throughout: **Thought → Structure → System → Result.
 ## Stack
 
 - **Vite + React + TypeScript** (fully static build, no server)
-- **Zero animation/physics/WebGL dependencies** — scroll-driven SVG, canvas
-  instruments, and CSS transitions owned by the components themselves
+- **Lenis 1.3.27** for smooth wheel scrolling inside normal document flow —
+  no scroll hijacking, snapping, or pinned horizontal sections
+- **No GSAP, Framer Motion, WebGL, or physics engine** — scroll-driven SVG,
+  canvas instruments, and CSS transitions owned by the components themselves
 - Plain CSS with a token system (`src/tokens.css`) — no UI framework, no icon library
 - Type roles: Newsreader (editorial serif) + DM Sans (technical sans) +
-  IBM Plex Mono (diagnostics only), all `display=swap` with system fallbacks
+  system monospace (diagnostics only), all `display=swap` with system fallbacks
 
 ## Project structure
 
@@ -22,6 +24,8 @@ portfolio-book/
 ├── index.html                  # SEO, OG/Twitter cards, JSON-LD Person schema
 ├── public/
 │   ├── favicon.svg
+│   ├── og-cover.png            # 1200×630 social card
+│   ├── apple-touch-icon.png
 │   ├── manifest.webmanifest
 │   └── assets/Mayank_Rana_SWE.pdf   # downloadable resume
 ├── src/
@@ -33,17 +37,22 @@ portfolio-book/
 │   │   └── portfolio.ts        # ★ facts: profile, projects (+case studies,
 │   │                           #   code excerpts), skills index, journey
 │   ├── lib/
-│   │   ├── motion.tsx          # silent OS motion preference
-│   │   └── reveal.tsx          # useInView, useScrollProgress, usePageProgress
+│   │   ├── scroll.ts           # one shared passive scroll + rAF loop
+│   │   ├── reveal.tsx          # useInView, useScrollProgress
+│   │   └── smooth.ts           # Lenis mount, anchor scrolling, scroll lock
 │   └── components/
-│       ├── Nav.tsx             # sticky nav, progress line, mobile menu
-│       ├── Hero.tsx            # giant statement + scroll-morphing signature line
-│       ├── ProofStrip.tsx      # four evidence blocks with line drawings
+│       ├── motion.tsx          # Magnetic, Tilt, Parallax, ScaleIn, Scramble
+│       ├── Nav.tsx             # sticky nav, progress line, mobile menu dialog
+│       ├── Hero.tsx            # masked headline + scroll-morphing signature line
+│       ├── ProofStrip.tsx      # four evidence blocks with counters
 │       ├── ProjectChapter.tsx  # alternating chapter + in-place case study
 │       ├── GatewayVisual.tsx   # sketch → live route + failover simulation
 │       ├── DigitVisual.tsx     # math → pipeline → drawable classifier canvas
 │       ├── DashVisual.tsx      # unstable bars → pooling rig + frame graph
 │       ├── ToolsVisual.tsx     # server crossed out → local before/after demo
+│       ├── WorkIndex.tsx       # hover-preview project index
+│       ├── StatementStrip.tsx  # sticky scroll-linked statement
+│       ├── Marquee.tsx         # pure-CSS tech ticker
 │       ├── SkillsIndex.tsx     # numbered index + draw-on-view symbols
 │       ├── About.tsx           # asymmetric statement + education
 │       ├── Journey.tsx         # vertical timeline, line draws with scroll
@@ -79,7 +88,7 @@ or a workflow running `npm ci && npm run build`).
 
 **Vercel:** framework preset “Vite”, build `npm run build`, output `dist`.
 
-Update the `canonical` URL in `index.html` to the final domain.
+Update the `canonical` URL in `index.html` once the final domain is known.
 
 ## Content model — changing information later
 
@@ -94,30 +103,39 @@ Update the `canonical` URL in `index.html` to the final domain.
 
 ## Interaction architecture
 
-- Normal document scroll everywhere: no hijacking, no snapping, no forced
-  horizontal movement. Scroll drives pacing through passive listeners + rAF.
-- Signature line morphs request-path → neural curve → frame graph → search
+- **Normal document scroll everywhere.** Lenis smooths wheel input on
+  pointer-fine devices only; it never hijacks, snaps, pins, or limits scroll.
+  Touch keeps native momentum. Anchors are ordinary links resolved through
+  `lib/smooth.ts`, with a mount-time deep-link pass after fonts settle. Under
+  `prefers-reduced-motion` Lenis is never mounted and native scrolling returns.
+- **One scroll loop.** `lib/scroll.ts` owns a single passive scroll/resize
+  listener plus one rAF loop. Every scrubbed effect subscribes; none adds its
+  own listener. `lib/reveal.tsx` adds IntersectionObserver reveals and
+  epsilon-gated progress updates, so React re-renders only on meaningful change.
+- **Motion vocabulary (eight effects, chosen once):** masked headline reveals;
+  scroll parallax on figures; stagger fade-ups for editorial blocks; proof
+  counters that run once on entry; a CSS tech marquee; figure depth/scale;
+  a 2px scroll-progress line; and a contact finale that scales into place.
+  Magnetic CTAs, card tilt, the before/after slider, the work-index hover
+  preview, and the sticky statement strip layer on top, all transform-only.
+- **Signature line** morphs request-path → neural curve → frame graph → search
   tree from hero scroll progress (lerped polylines, identical point counts).
-- Project visuals evolve rough → polished across scroll stages, then stay
+- **Project visuals** evolve rough → polished across scroll stages, then stay
   live: failover replays, drawable classifier, pooling toggle, local processor.
-- Case studies expand in place (grid-rows animation) keeping the title on
-  screen; anchor `#hash` links work natively, plus a mount-time deep-link
-  scroll for fresh loads (browsers scroll before React mounts content).
-- Canvas loops start only when their stage is reached, pause when the tab
-  hides, and clean up on unmount. Reduced motion renders static states.
-- The digit classifier is a real on-device template matcher (28×28 MSE over
-  font-rendered prototypes), honestly labeled as illustrative of the deployed
-  CNN pipeline. Dash frame data is measured live; Tools timing is measured
-  with `performance.now()`. Only documented project results are stated.
-- **Show layer** (`components/motion.tsx`, `StatementStrip`, `WorkIndex`,
-  `Marquee`): a sticky scroll-linked statement strip (transform only, never
-  layout); a fast-scan project index whose hover preview follows the cursor
-  (dimming siblings, touch devices get plain anchor rows); magnetic CTAs and
-  subtle 3D figure tilt (pointer-fine only, inert on touch/reduced motion);
-  a one-shot text decode on the hero kicker; a pure-CSS tech ticker; a
-  keyboard-operable before/after comparison slider; copy-email feedback plus
-  a live IST clock; scrollspy nav highlighting. All progressive enhancement —
-  every control works statically without its motion.
+  Telemetry rows reserve their height, so simulations never shift layout.
+- **Case studies** expand in place (grid-rows animation) keeping the title on
+  screen. Canvas loops start only when their stage is reached, pause when the
+  tab hides, and clean up on unmount.
+- **Honest demos.** The digit classifier is a real on-device template matcher
+  (28×28 MSE over font-rendered prototypes), labeled as illustrative of the
+  deployed CNN pipeline. Dash frame data is measured live; Tools timing uses
+  `performance.now()`. Only documented project results are stated.
+- **Navigation.** Glass sticky nav with scrollspy (`aria-current`), a hairline
+  progress bar, and a focus-trapped mobile dialog that locks scroll and returns
+  focus on close. Copy-email announces through a live region with a stable
+  accessible name; the IST clock is live text.
+- **Reduced motion.** Lenis, marquee, grain, parallax, scramble, and scroll
+  morphs switch off; simulations resolve to their static documented states.
 
 ## Design rationale
 
@@ -127,30 +145,47 @@ Update the `canonical` URL in `index.html` to the final domain.
 - **Editorial first.** Warm paper, ink text, one vermilion accent, per-project
   engineering colors in lines and states only. Asymmetry, margin discipline,
   cropped numerals — every scene composed to survive as a static screenshot.
-- **Four motions only.** Line drawing, mask reveals, in-place expansion,
-  subtle depth. No fade-up-everywhere, no bouncy easing, no typewriters,
-  no cursors, no floating logos.
+- **A deliberately small motion vocabulary.** Masked reveals, scroll parallax,
+  stagger, counters, one marquee, figure depth, a progress line, and a single
+  finale scale-up. No fade-up-everywhere, no bouncy easing, no typewriters,
+  no cursor spotlights, no floating logos.
 - **Familiar shell.** Sticky nav with progress line, standard anchors, mobile
   menu, stacked mobile layouts, browser Back working normally.
 
 ## Performance decisions
 
-- No WebGL, no animation libraries, no icon library (inline SVG only).
-- Passive scroll listeners with rAF throttling; state updates only past
-  epsilon thresholds; canvases idle until visible.
+- No WebGL, no GSAP/Framer Motion, no icon library (inline SVG only).
+- Lenis is the only motion dependency and all scrubbed effects share one
+  passive listener + rAF loop; state updates only past epsilon thresholds;
+  canvases idle until visible.
 - Fonts `display=swap` with system fallbacks; only three families.
-- Targets: < ~170 KB compressed JS (~86 KB today), systemic 60 FPS,
-  zero console errors.
+- Targets: < ~110 KB compressed JS (~97 KB today), 60 FPS+, zero console errors.
 
 ## Accessibility decisions
 
 - Semantic landmarks, single `h1`, logical heading order, skip link.
-- Full keyboard model (all buttons/links native; drawer-free nav); visible
-  focus rings; 44 px minimum targets; menu returns focus on close.
+- Full keyboard model; the mobile menu is a modal dialog with a focus trap,
+  Escape handling, scroll lock, and focus return; visible focus rings; 44 px
+  minimum targets.
 - Canvas demos all have text alternatives (diagnostic readouts beside them).
-- `prefers-reduced-motion` freezes scroll morphs, packets, and canvas loops;
-  simulations resolve to static documented states.
-- Native scroll behavior is never altered on any device.
+- `prefers-reduced-motion` removes Lenis, the marquee, grain, and scroll
+  morphs; simulations resolve to static documented states.
+- Native scrolling is never altered when reduced motion is requested.
+
+## Verified in this pass
+
+- `npm run build` (tsc + Vite) and `npm run lint` (oxlint) are clean.
+- Chrome production preview: zero console errors and zero failed requests.
+- No horizontal overflow at 1440×900, 768×1024, or 375×812.
+- Document height stays 10,659 px while scrolling; the sticky nav stays 67 px
+  at rest and after scroll, so anchor targets do not drift.
+- Nav anchors settle 72–73 px below the viewport top; deep links land at 72 px.
+- Counters finish at 800+, 25%, 97%, 60 FPS; the contact finale resolves to
+  `matrix(1, 0, 0, 1, 0, 0)` at the page bottom.
+- Copy-email width is stable at 232 px before/after; feedback is announced.
+- Scripted-scroll frame timing: 6.94 ms average, 7.2 ms p95 (headless Chrome,
+  144 Hz host) — comfortably inside a 60 FPS budget.
+- Reduced motion: Lenis not mounted, marquee/grain disabled, static visuals.
 
 ## Browser & viewport testing checklist
 

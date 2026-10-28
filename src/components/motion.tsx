@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type ReactNode } from 'react';
+import { elementProgress, onScrollFrame } from '../lib/scroll';
 
 function motionAllowed(): boolean {
   if (typeof window === 'undefined') return false;
@@ -144,6 +145,87 @@ export function Tilt({
 
   return (
     <div ref={ref} className={className} style={{ ...style, willChange: 'transform' }}>
+      {children}
+    </div>
+  );
+}
+
+/**
+ * Scroll-linked depth. The child rises a few pixels and settles at scale 1
+ * as it crosses the viewport. Transform only; no layout reads in React.
+ */
+export function Parallax({
+  children,
+  distance = 22,
+  scale = 0.02,
+  className,
+}: {
+  children: ReactNode;
+  distance?: number;
+  scale?: number;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !motionAllowed()) return;
+    const clear = onScrollFrame(() => {
+      const p = elementProgress(el);
+      const y = (0.5 - p) * distance;
+      const s = 1 - scale + p * scale;
+      el.style.transform = `translate3d(0, ${y.toFixed(1)}px, 0) scale(${s.toFixed(4)})`;
+    });
+    return () => {
+      clear();
+      el.style.transform = '';
+    };
+  }, [distance, scale]);
+
+  return (
+    <div ref={ref} className={className} style={{ willChange: 'transform' }}>
+      {children}
+    </div>
+  );
+}
+
+/**
+ * Finale scale-up: a large block arrives slightly small and grows into
+ * place. It resolves by the time the block's top reaches the upper third
+ * of the viewport, so the last section on the page always finishes.
+ */
+export function ScaleIn({
+  children,
+  from = 0.95,
+  className,
+}: {
+  children: ReactNode;
+  from?: number;
+  className?: string;
+}) {
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el || !motionAllowed()) return;
+    const clear = onScrollFrame(() => {
+      const vh = window.innerHeight || 1;
+      const top = el.getBoundingClientRect().top;
+      const raw = Math.min(1, Math.max(0, (vh * 0.9 - top) / (vh * 0.55)));
+      const eased = raw * raw * (3 - 2 * raw);
+      const s = from + (1 - from) * eased;
+      el.style.transform = `scale(${s.toFixed(4)})`;
+      el.style.opacity = (0.55 + 0.45 * eased).toFixed(3);
+    });
+    return () => {
+      clear();
+      el.style.transform = '';
+      el.style.opacity = '';
+    };
+  }, [from]);
+
+  return (
+    <div ref={ref} className={className} style={{ transformOrigin: '50% 0%', willChange: 'transform, opacity' }}>
       {children}
     </div>
   );

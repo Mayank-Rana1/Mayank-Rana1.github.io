@@ -1,6 +1,5 @@
 ﻿import { journey } from '../data/portfolio';
 import { useInView, useScrollProgress } from '../lib/reveal';
-
 /**
  * Clean vertical timeline. The signature line draws itself downward
  * with scroll - familiar, connected, and quiet.
@@ -18,27 +17,30 @@ const ENTRIES: { year: string; title: string; body: string; stat?: string }[] = 
 export default function Journey() {
   const { ref: headRef, visible } = useInView<HTMLDivElement>(0.25);
   const { ref: tlRef, progress } = useScrollProgress<HTMLDivElement>();
+  const { ref: itemsRef, visible: itemsIn } = useInView<HTMLDivElement>(0.08);
   return (
-    <section id="journey" aria-labelledby="journey-title" style={{ padding: 'clamp(64px, 11vh, 130px) 0' }}>
+    <section id="journey" aria-labelledby="journey-title" style={{ padding: 'var(--section-y) 0' }}>
       <div className="wrap" ref={headRef}>
         <div className="section-head">
           <p className="eyebrow">Journey</p>
           <h2 id="journey-title">
             <span className={`rv${visible ? ' in' : ''}`}><span className="rv-in">Measured in problems,</span></span>
-            <span className={`rv${visible ? ' in' : ''}`}><span className="rv-in">people, and contests.</span></span>
+            <span className={`rv${visible ? ' in' : ''}`} style={{ '--rd': '80ms' } as React.CSSProperties}><span className="rv-in">people, and contests.</span></span>
           </h2>
         </div>
         <div ref={tlRef} className="timeline">
           <div className="tl-track" aria-hidden="true">
             <i style={{ ['--fill' as string]: progress.toFixed(3) }} />
           </div>
-          {ENTRIES.map((e) => (
-            <div className="tl-item" key={e.year + e.title}>
-              <p className="tl-year">{e.year}</p>
-              <h3>{e.title}</h3>
-              <p>{e.body}</p>
-            </div>
-          ))}
+          <div ref={itemsRef} className={`tl-items stag${itemsIn ? ' in' : ''}`}>
+            {ENTRIES.map((e, i) => (
+              <div className="tl-item" key={e.year + e.title} style={{ '--rd': `${i * 55}ms` } as React.CSSProperties}>
+                <p className="tl-year">{e.year}</p>
+                <h3>{e.title}</h3>
+                <p>{e.body}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     </section>

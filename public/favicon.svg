@@ -1,6 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64">
-  <rect x="2" y="2" width="60" height="60" rx="8" fill="#4D1B18"/>
-  <rect x="2" y="2" width="60" height="60" rx="8" fill="none" stroke="#C99751" stroke-width="2.5"/>
-  <rect x="8" y="8" width="48" height="48" rx="4" fill="none" stroke="#C99751" stroke-width="1" opacity="0.5"/>
-  <text x="32" y="42" font-family="Georgia, serif" font-weight="bold" font-size="24" fill="#F3E3C2" text-anchor="middle">MR</text>
+  <rect width="64" height="64" rx="10" fill="#11110F"/>
+  <path d="M10 50V14h5l17 22 17-22h5v36h-6V25L32 43 16 25v25z" fill="#F3F0E8"/>
+  <rect x="47" y="47" width="7" height="7" fill="#EA4F35"/>
 </svg>
