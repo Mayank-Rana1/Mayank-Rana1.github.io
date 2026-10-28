@@ -1,6 +1,60 @@
-﻿import { journey, profile } from '../data/portfolio';
+﻿import { useEffect, useState } from 'react';
+import { journey, profile } from '../data/portfolio';
 import { IconFile } from './icons';
+import { Magnetic } from './motion';
 import { useInView } from '../lib/reveal';
+
+function useKolkataTime() {
+  const [time, setTime] = useState('--:--');
+  useEffect(() => {
+    const fmt = new Intl.DateTimeFormat('en-IN', {
+      hour: '2-digit',
+      minute: '2-digit',
+      hour12: false,
+      timeZone: 'Asia/Kolkata',
+    });
+    const update = () => {
+      try {
+        setTime(fmt.format(new Date()));
+      } catch {
+        /* ignore */
+      }
+    };
+    update();
+    const id = window.setInterval(update, 20000);
+    return () => window.clearInterval(id);
+  }, []);
+  return time;
+}
+
+function CopyEmail() {
+  const [copied, setCopied] = useState(false);
+  const copy = async () => {
+    try {
+      await navigator.clipboard.writeText(profile.email);
+    } catch {
+      const ta = document.createElement('textarea');
+      ta.value = profile.email;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1800);
+  };
+  return (
+    <button
+      type="button"
+      className="btn btn-light"
+      onClick={copy}
+      aria-live="off"
+      aria-label={copied ? 'Email address copied' : 'Copy email address'}
+    >
+      {copied ? 'Copied to clipboard' : profile.email}
+    </button>
+  );
+}
 
 /**
  * The finale: an almost entirely dark section, one large question,
@@ -9,6 +63,7 @@ import { useInView } from '../lib/reveal';
  */
 export default function Contact() {
   const { ref, visible } = useInView<HTMLDivElement>(0.25);
+  const localTime = useKolkataTime();
   return (
     <section id="contact" className="contact" aria-labelledby="contact-title" style={{ padding: 'clamp(72px, 12vh, 140px) 0 30px' }}>
       <div className="wrap" ref={ref}>
@@ -22,9 +77,12 @@ export default function Contact() {
           open-source work, and ambitious product ideas.
         </p>
         <div className="contact-actions">
-          <a className="btn btn-vermilion" href={`mailto:${profile.email}`}>
-            Email Mayank
-          </a>
+          <Magnetic>
+            <a className="btn btn-vermilion" href={`mailto:${profile.email}`}>
+              Email Mayank
+            </a>
+          </Magnetic>
+          <CopyEmail />
           <a className="btn btn-light" href={profile.github} target="_blank" rel="noopener noreferrer">GitHub</a>
           <a className="btn btn-light" href={profile.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
           <a className="btn btn-light" href={profile.resume} download="Mayank_Rana_SWE.pdf">
@@ -35,7 +93,7 @@ export default function Contact() {
           <li><a href="https://www.codechef.com/users/mayank_rana17" target="_blank" rel="noopener noreferrer">CodeChef</a></li>
           <li><a href="https://leetcode.com/u/Mayank_Rana/" target="_blank" rel="noopener noreferrer">LeetCode</a></li>
           <li><a href="https://codeforces.com/profile/Mayank_Rana7" target="_blank" rel="noopener noreferrer">Codeforces</a></li>
-          <li><span style={{ color: 'var(--ivory-faint)' }}>{profile.location}</span></li>
+          <li><span style={{ color: 'var(--ivory-faint)' }}>{profile.location} · <span style={{ fontFamily: 'var(--mono)' }}>{localTime} IST</span></span></li>
         </ul>
         <div className={`mono-finale draw${visible ? ' in' : ''}`}>
           <svg viewBox="0 0 560 120" role="presentation" aria-hidden="true">

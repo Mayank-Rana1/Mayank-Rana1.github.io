@@ -19,6 +19,7 @@ const LINKS = [
 export default function Nav() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  const [active, setActive] = useState('#top');
   const progress = usePageProgress();
   const menuBtn = useRef<HTMLButtonElement>(null);
 
@@ -27,6 +28,25 @@ export default function Nav() {
     onScroll();
     window.addEventListener('scroll', onScroll, { passive: true });
     return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  /* Scrollspy: highlight the section actually on screen. */
+  useEffect(() => {
+    const ids = ['work', 'about', 'capabilities', 'journey', 'contact'];
+    const sections = ids
+      .map((id) => document.getElementById(id))
+      .filter((el): el is HTMLElement => el !== null);
+    if (sections.length === 0 || typeof IntersectionObserver === 'undefined') return;
+    const io = new IntersectionObserver(
+      (entries) => {
+        for (const e of entries) {
+          if (e.isIntersecting) setActive(`#${(e.target as HTMLElement).id}`);
+        }
+      },
+      { rootMargin: '-38% 0px -55% 0px', threshold: 0 }
+    );
+    sections.forEach((s) => io.observe(s));
+    return () => io.disconnect();
   }, []);
 
   useEffect(() => {
@@ -53,7 +73,9 @@ export default function Nav() {
             <ul className="nav-links">
               {LINKS.map((l) => (
                 <li key={l.href}>
-                  <a href={l.href}>{l.label}</a>
+                  <a href={l.href} aria-current={active === l.href ? 'true' : undefined} data-active={active === l.href}>
+                    {l.label}
+                  </a>
                 </li>
               ))}
             </ul>

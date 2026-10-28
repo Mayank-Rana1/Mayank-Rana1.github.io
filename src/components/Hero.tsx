@@ -1,6 +1,7 @@
 ﻿import { useMemo } from 'react';
 import { profile } from '../data/portfolio';
 import { IconFile } from './icons';
+import { Magnetic, Scramble } from './motion';
 import { useInView, useScrollProgress } from '../lib/reveal';
 
 const N = 28;
@@ -101,7 +102,7 @@ export default function Hero({ reduced }: { reduced: boolean }) {
     <section className="hero" aria-labelledby="hero-title" id="top">
       <div className="wrap hero-grid" ref={ref}>
         <div>
-          <p className="hero-kicker">PORTFOLIO &mdash; MAYANK RANA</p>
+          <p className="hero-kicker"><Scramble text="PORTFOLIO  — MAYANK RANA" /></p>
           <h1 id="hero-title" className="hero-title">
             <span className={`rv${visible ? ' in' : ''}`}><span className="rv-in">I turn <em>first principles</em></span></span>
             <span className={`rv${visible ? ' in' : ''}`}><span className="rv-in">into working systems.</span></span>
@@ -111,7 +112,9 @@ export default function Hero({ reduced }: { reduced: boolean }) {
             infrastructure, machine-learning systems, browser tools, and performance-sensitive products.
           </p>
           <div className="hero-cta">
-            <a className="btn btn-vermilion" href="#work">Explore selected work</a>
+            <Magnetic>
+              <a className="btn btn-vermilion" href="#work">Explore selected work</a>
+            </Magnetic>
             <a className="btn btn-ghost" href={profile.resume} download="Mayank_Rana_SWE.pdf">
               <IconFile size={15} /> Download resume
             </a>

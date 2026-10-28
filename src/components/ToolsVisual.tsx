@@ -1,5 +1,6 @@
 import { useRef, useState } from 'react';
 import { useScrollProgress } from '../lib/reveal';
+import { Tilt } from './motion';
 
 const W = 300;
 const H = 180;
@@ -17,6 +18,15 @@ export default function ToolsVisual({ reduced }: { reduced: boolean }) {
   const [ms, setMs] = useState<number | null>(null);
   const [done, setDone] = useState(false);
   const painted = useRef(false);
+  const [pos, setPos] = useState(50);
+  const sliderRef = useRef<HTMLDivElement>(null);
+  const dragging = useRef(false);
+
+  const setFromClientX = (clientX: number) => {
+    const r = sliderRef.current?.getBoundingClientRect();
+    if (!r || r.width === 0) return;
+    setPos(Math.min(96, Math.max(4, ((clientX - r.left) / r.width) * 100)));
+  };
 
   const paintSample = () => {
     const c = srcRef.current;
@@ -71,7 +81,7 @@ export default function ToolsVisual({ reduced }: { reduced: boolean }) {
 
   return (
     <div ref={ref}>
-      <div className="fig" style={{ '--pcc': 'var(--p-violet)' } as React.CSSProperties}>
+      <Tilt max={4}><div className="fig" style={{ '--pcc': 'var(--p-violet)' } as React.CSSProperties}>
         <div className="fig-cap"><span>FIG. 04 — WHERE PIXELS GO</span><span>{crossed ? 'LOCAL ONLY' : 'SKETCH'}</span></div>
         <div className="diagline" style={{ fontSize: '0.85rem', lineHeight: 2 }}>
           <div><span className="k">01 </span>4K FILE ENTERS THE BROWSER</div>
@@ -88,16 +98,57 @@ export default function ToolsVisual({ reduced }: { reduced: boolean }) {
           <div><span className="k">04 </span>GENERATED RESULT · EXPORT</div>
         </div>
       </div>
+      </Tilt>
       <div className="demo-well">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: 10 }} className="tools-pair">
-          <div>
-            <canvas ref={srcRef} width={W} height={H} style={{ width: '100%', height: 'auto', borderRadius: 4, border: '1px solid var(--coalline-strong)' }} aria-label="Sample input image" />
-            <p className="diagline" style={{ marginTop: 6 }}><span className="k">INPUT</span></p>
+        <div
+          ref={sliderRef}
+          className="compare"
+          role="slider"
+          tabIndex={0}
+          aria-label="Before and after comparison slider"
+          aria-valuemin={0}
+          aria-valuemax={100}
+          aria-valuenow={Math.round(pos)}
+          aria-valuetext={`${Math.round(pos)} percent original shown`}
+          onPointerDown={(e) => {
+            dragging.current = true;
+            sliderRef.current?.setPointerCapture(e.pointerId);
+            setFromClientX(e.clientX);
+          }}
+          onPointerMove={(e) => {
+            if (dragging.current) setFromClientX(e.clientX);
+          }}
+          onPointerUp={() => {
+            dragging.current = false;
+          }}
+          onPointerCancel={() => {
+            dragging.current = false;
+          }}
+          onKeyDown={(e) => {
+            if (e.key === 'ArrowLeft') {
+              e.preventDefault();
+              setPos((p) => Math.max(4, p - 6));
+            } else if (e.key === 'ArrowRight') {
+              e.preventDefault();
+              setPos((p) => Math.min(96, p + 6));
+            } else if (e.key === 'Home') {
+              e.preventDefault();
+              setPos(4);
+            } else if (e.key === 'End') {
+              e.preventDefault();
+              setPos(96);
+            }
+          }}
+        >
+          <canvas ref={outRef} width={W} height={H} className="compare-base" aria-label="Locally processed output" />
+          <div className="compare-top" style={{ clipPath: `inset(0 ${100 - pos}% 0 0)` }}>
+            <canvas ref={srcRef} width={W} height={H} aria-label="Sample input image" />
           </div>
-          <div>
-            <canvas ref={outRef} width={W} height={H} style={{ width: '100%', height: 'auto', borderRadius: 4, border: '1px solid var(--coalline-strong)', background: '#0c0b0a' }} aria-label="Locally processed output" />
-            <p className="diagline" style={{ marginTop: 6 }}><span className="k">OUTPUT</span></p>
+          <div className="compare-divider" style={{ left: `${pos}%` }} aria-hidden="true">
+            <span className="compare-knob" aria-hidden="true" />
           </div>
+          <span className="compare-tag left">BEFORE</span>
+          <span className="compare-tag right">AFTER</span>
         </div>
         <div className="diagline" style={{ marginTop: 10 }}>
           <div><span className="k">PIXELS </span>{(W * H).toLocaleString('en-US')}</div>

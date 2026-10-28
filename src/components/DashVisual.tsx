@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { projects } from '../data/portfolio';
 import { useScrollProgress } from '../lib/reveal';
+import { Tilt } from './motion';
 
 const W = 520;
 const H = 200;
@@ -144,7 +145,7 @@ export default function DashVisual({ reduced }: { reduced: boolean }) {
 
   return (
     <div ref={ref}>
-      <div className="fig" style={{ '--pcc': 'var(--p-orange)' } as React.CSSProperties}>
+      <Tilt max={4}><div className="fig" style={{ '--pcc': 'var(--p-orange)' } as React.CSSProperties}>
         <div className="fig-cap"><span>FIG. 03 — FRAME TIMES</span><span>{stage === 0 ? 'UNSTABLE' : 'LIVE RIG'}</span></div>
         <div className="stage-cross">
           <svg viewBox="0 0 300 120" style={{ width: '100%', height: 'auto', opacity: stage === 0 ? 1 : 0 }} aria-hidden={stage !== 0}>
@@ -158,6 +159,7 @@ export default function DashVisual({ reduced }: { reduced: boolean }) {
           </div>
         </div>
       </div>
+      </Tilt>
       <div className="demo-well">
         <div className="diagline">
           <div><span className="k">POOLING </span><span className={pooled ? 'ok' : 'err'}>{pooled ? 'ON — REUSE' : 'OFF — ALLOCATE'}</span></div>

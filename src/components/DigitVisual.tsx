@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { projects } from '../data/portfolio';
 import { useScrollProgress } from '../lib/reveal';
+import { Tilt } from './motion';
 
 const N = 28;
 
@@ -149,7 +150,7 @@ export default function DigitVisual({ reduced }: { reduced: boolean }) {
 
   return (
     <div ref={ref}>
-      <div className="fig" style={{ '--pcc': 'var(--p-blue)' } as React.CSSProperties}>
+      <Tilt max={4}><div className="fig" style={{ '--pcc': 'var(--p-blue)' } as React.CSSProperties}>
         <div className="fig-cap"><span>FIG. 02 — FROM MATH TO MACHINE</span><span>{stage === 0 ? 'SKETCH' : 'PIPELINE'}</span></div>
         <div className="stage-cross">
           <p className="fig-sketch" style={{ opacity: stage === 0 ? 1 : 0, fontSize: '1rem' }} aria-hidden={stage !== 0}>
@@ -164,6 +165,7 @@ export default function DigitVisual({ reduced }: { reduced: boolean }) {
           </div>
         </div>
       </div>
+      </Tilt>
       <div className="demo-well">
         <canvas
           ref={drawRef}

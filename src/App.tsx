@@ -2,6 +2,9 @@ import { useEffect } from 'react';
 import Nav from './components/Nav';
 import Hero from './components/Hero';
 import ProofStrip from './components/ProofStrip';
+import StatementStrip from './components/StatementStrip';
+import WorkIndex from './components/WorkIndex';
+import Marquee from './components/Marquee';
 import ProjectChapter from './components/ProjectChapter';
 import GatewayVisual from './components/GatewayVisual';
 import DigitVisual from './components/DigitVisual';
@@ -55,6 +58,7 @@ export default function App() {
         <Hero reduced={reduced} />
         <ProofStrip />
         <div id="work" style={{ scrollMarginTop: 'calc(var(--nav-h) + 8px)' }}>
+          <WorkIndex />
           {projects.map((p, i) => (
             <ProjectChapter
               key={p.no}
@@ -67,9 +71,11 @@ export default function App() {
             />
           ))}
         </div>
+        <StatementStrip />
         <SkillsIndex />
         <About />
         <Journey />
+        <Marquee label="WORKING SET" />
         <Contact />
       </main>
     </div>

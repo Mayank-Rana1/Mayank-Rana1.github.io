@@ -109,6 +109,15 @@ Update the `canonical` URL in `index.html` to the final domain.
   font-rendered prototypes), honestly labeled as illustrative of the deployed
   CNN pipeline. Dash frame data is measured live; Tools timing is measured
   with `performance.now()`. Only documented project results are stated.
+- **Show layer** (`components/motion.tsx`, `StatementStrip`, `WorkIndex`,
+  `Marquee`): a sticky scroll-linked statement strip (transform only, never
+  layout); a fast-scan project index whose hover preview follows the cursor
+  (dimming siblings, touch devices get plain anchor rows); magnetic CTAs and
+  subtle 3D figure tilt (pointer-fine only, inert on touch/reduced motion);
+  a one-shot text decode on the hero kicker; a pure-CSS tech ticker; a
+  keyboard-operable before/after comparison slider; copy-email feedback plus
+  a live IST clock; scrollspy nav highlighting. All progressive enhancement —
+  every control works statically without its motion.
 
 ## Design rationale
 

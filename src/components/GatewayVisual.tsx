@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { projects } from '../data/portfolio';
 import { useScrollProgress } from '../lib/reveal';
+import { Tilt } from './motion';
 
 type LogLine = { ms: number; text: string; kind?: 'err' | 'ok' };
 
@@ -74,6 +75,7 @@ export default function GatewayVisual({ reduced }: { reduced: boolean }) {
 
   return (
     <div ref={ref}>
+      <Tilt max={4}>
       <div className="fig" style={{ '--pcc': 'var(--p-green)' } as React.CSSProperties}>
         <div className="fig-cap"><span>FIG. 01 — REQUEST PATH</span><span>{stage === 0 ? 'SKETCH' : 'LIVE'}</span></div>
         <div className="stage-cross">
@@ -101,8 +103,8 @@ export default function GatewayVisual({ reduced }: { reduced: boolean }) {
           </div>
         </div>
       </div>
-      <div className="diagline" style={{ marginTop: 12 }}>
-        <div><span className="k">CIRCUIT </span><span className={failed ? 'err' : 'ok'}>{failed ? 'OPEN' : 'CLOSED'}</span>
+      </Tilt>
+      <div className="diagline" style={{ marginTop: 12 }}>        <div><span className="k">CIRCUIT </span><span className={failed ? 'err' : 'ok'}>{failed ? 'OPEN' : 'CLOSED'}</span>
         {failoverMs !== null ? <span> · FAILOVER IN {failoverMs}MS</span> : null}</div>
         {log.slice(-3).map((l, i) => (
           <div key={i}><span className="k">t+{l.ms}ms </span><span className={l.kind ?? ''}>{l.text}</span></div>
