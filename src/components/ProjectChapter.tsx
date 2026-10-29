@@ -2,16 +2,17 @@ import { useEffect, useRef, useState } from 'react';
 import type { Project } from '../data/portfolio';
 import { IconExternal, IconGithub, IconPlus } from './icons';
 import { Parallax } from './motion';
+import ProjectPlate from './ProjectPlate';
 import { useInView } from '../lib/reveal';
 import { scrollToElement } from '../lib/smooth';
 
-export type Accent = { color: string; bright: string; dim: string; soft: string };
+export type Accent = { color: string; bright: string };
 
 const ACCENTS: Accent[] = [
-  { color: 'var(--p-green)', bright: 'var(--p-green-bright)', dim: 'rgba(30,107,65,0.12)', soft: 'rgba(30,107,65,0.07)' },
-  { color: 'var(--p-blue)', bright: 'var(--p-blue-bright)', dim: 'rgba(31,79,168,0.16)', soft: 'rgba(31,79,168,0.09)' },
-  { color: 'var(--p-orange)', bright: 'var(--p-orange-bright)', dim: 'rgba(194,90,29,0.12)', soft: 'rgba(194,90,29,0.07)' },
-  { color: 'var(--p-violet)', bright: 'var(--p-violet-bright)', dim: 'rgba(91,67,145,0.16)', soft: 'rgba(91,67,145,0.09)' },
+  { color: 'var(--p-green)', bright: 'var(--p-green-bright)' },
+  { color: 'var(--p-blue)', bright: 'var(--p-blue-bright)' },
+  { color: 'var(--p-orange)', bright: 'var(--p-orange-bright)' },
+  { color: 'var(--p-violet)', bright: 'var(--p-violet-bright)' },
 ];
 
 /** Five-to-eight line honest code excerpt, captioned as illustration. */
@@ -25,8 +26,9 @@ function CodeExcerpt({ caption, lang, lines }: { caption: string; lang: string; 
 }
 
 /**
- * One full-width scroll chapter. Text and visual alternate sides;
- * the case study expands in place beneath them with the title intact.
+ * One full-width scroll chapter. The proposition opens the spread, the
+ * constraint column carries the evidence, and a full-width system map
+ * explains the architecture. The case study expands in place beneath.
  */
 export default function ProjectChapter(props: {
   project: Project;
@@ -34,11 +36,10 @@ export default function ProjectChapter(props: {
   flip: boolean;
   dark: boolean;
   reduced: boolean;
-  visual: React.ReactNode;
 }) {
   const { project: p, index, flip, dark, reduced } = props;
   const [open, setOpen] = useState(false);
-  const { ref, visible } = useInView<HTMLElement>(0.15);
+  const { ref, visible } = useInView<HTMLElement>(0.12);
   const caseRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -59,11 +60,11 @@ export default function ProjectChapter(props: {
       data-no={p.no}
       className={`chapter${dark ? ' dark' : ''}`}
       aria-labelledby={`${p.hash}-title`}
-      style={{ '--pcc': accent.color } as React.CSSProperties}
+      style={{ '--pcc': dark ? accent.bright : accent.color } as React.CSSProperties}
     >
       <div className="wrap">
-        <div className={`proj-grid${flip ? ' flip' : ''}`}>
-          <div className="proj-copy" data-in={visible}>
+        <div className={`proj-head${flip ? ' flip' : ''}`} data-in={visible}>
+          <div className="proj-intro">
             <p className="pnum-row">
               <span className="pnum">PROJECT {p.no}</span>
               <span className="pcat">{p.category}</span>
@@ -72,6 +73,10 @@ export default function ProjectChapter(props: {
               <span className={`rv${visible ? ' in' : ''}`}><span className="rv-in">{p.title}</span></span>
             </h2>
             <p className="pvalue">{p.value}</p>
+          </div>
+
+          <div className="proj-aside">
+            <p className="proj-label">The problem</p>
             <p className="pexp">{p.problem}</p>
             <h3 className="sr-only">Key technologies</h3>
             <ul className="tag-row ptech" aria-label={`${p.title} key technologies`}>
@@ -100,10 +105,12 @@ export default function ProjectChapter(props: {
               {open ? 'Collapse case study' : 'Expand case study'} <IconPlus size={15} />
             </button>
           </div>
-          <Parallax className="proj-visual" distance={18} scale={0.018}>
-            {props.visual}
-          </Parallax>
         </div>
+
+        <Parallax className="proj-plate-wrap" distance={14} scale={0.008}>
+          <ProjectPlate project={p} accent={dark ? accent.bright : accent.color} reduced={reduced} />
+        </Parallax>
+
         <div ref={caseRef} id={`${p.hash}-case`} className="case-study" data-open={open}>
           <div>
             {open ? (

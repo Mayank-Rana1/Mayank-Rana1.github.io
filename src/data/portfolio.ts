@@ -55,6 +55,21 @@ export const profile = {
 
 export type CodeExcerpt = { caption: string; lang: string; lines: string[] };
 
+export type PlateStep = {
+  label: string;
+  detail: string;
+  sub?: string[];
+  blocked?: boolean;
+};
+
+export type ProjectPlateData = {
+  title: string;
+  statement: string;
+  note: string;
+  steps: PlateStep[];
+  specs: { k: string; v: string }[];
+};
+
 export type Project = {
   no: string;
   title: string;
@@ -74,6 +89,7 @@ export type Project = {
   demoLabel?: string;
   status: string;
   accent: 'forest' | 'rust' | 'blue';
+  plate: ProjectPlateData;
   diagramTitle: string;
   diagram: string[];
   constraints: string[];
@@ -136,6 +152,23 @@ export const projects: Project[] = [
     },
     status: 'Backend system · 2025',
     accent: 'forest',
+    plate: {
+      title: 'Request path',
+      statement: 'One contract. Any provider.',
+      note: 'A single client shape fans out across three or more providers behind a health-aware router; every stream returns normalized.',
+      steps: [
+        { label: 'Client', detail: 'one JSON shape' },
+        { label: 'Gateway', detail: 'FastAPI + Pydantic' },
+        { label: 'Router', detail: 'health + breaker' },
+        { label: 'Providers', detail: 'primary or failover', sub: ['primary LLM', 'secondary LLM'] },
+        { label: 'SSE stream', detail: 'normalized chunks' },
+      ],
+      specs: [
+        { k: 'Providers', v: '3+' },
+        { k: 'Latency', v: '-25%' },
+        { k: 'Transport', v: 'SSE' },
+      ],
+    },
     diagramTitle: 'Request path',
     diagram: [
       'Client sends one unified JSON request',
@@ -201,6 +234,23 @@ export const projects: Project[] = [
     },
     status: 'ML pipeline · browser deployment',
     accent: 'blue',
+    plate: {
+      title: 'From math to machine',
+      statement: 'The network, from scratch.',
+      note: 'Hand-coded mathematics becomes a quantized model that runs entirely inside the browser, with zero uploads.',
+      steps: [
+        { label: 'Input', detail: '28 x 28 grayscale' },
+        { label: 'NumPy net', detail: 'forward + backward by hand' },
+        { label: 'MLP', detail: 'ReLU + Softmax / 97%' },
+        { label: 'ONNX', detail: '8-bit / ~225 KB' },
+        { label: 'Browser', detail: 'ONNX Runtime Web' },
+      ],
+      specs: [
+        { k: 'Accuracy', v: '97%' },
+        { k: 'Model', v: '~225 KB' },
+        { k: 'Uploads', v: '0' },
+      ],
+    },
     diagramTitle: 'From math to browser',
     diagram: [
       'Hand-coded NumPy net: forward + backward passes',
@@ -266,6 +316,23 @@ export const projects: Project[] = [
     },
     status: 'Shipped Android game',
     accent: 'rust',
+    plate: {
+      title: 'Runtime systems',
+      statement: 'Reuse. Never allocate.',
+      note: 'A fixed pool feeds the spawner while score, ads, and UI stay isolated from the frame loop.',
+      steps: [
+        { label: 'Input', detail: 'touch input' },
+        { label: 'Game loop', detail: 'one state source' },
+        { label: 'Managers', detail: 'isolated systems', sub: ['object pool', 'score + leaderboard', 'ads + UI'] },
+        { label: 'Frame budget', detail: '16.6 ms target' },
+        { label: 'Stable loop', detail: '60 FPS on budget Android' },
+      ],
+      specs: [
+        { k: 'Entities', v: '100+' },
+        { k: 'Frame rate', v: '60 FPS' },
+        { k: 'GC stutter', v: '-40ms' },
+      ],
+    },
     diagramTitle: 'Runtime systems',
     diagram: [
       'Player input reaches the Game Manager',
@@ -328,6 +395,23 @@ export const projects: Project[] = [
     },
     status: 'Live · maintained',
     accent: 'forest',
+    plate: {
+      title: 'Local-first flow',
+      statement: 'The server never sees it.',
+      note: 'One shared Canvas pipeline powers three utilities inside the browser boundary; every byte stays local.',
+      steps: [
+        { label: 'File', detail: '4K image enters' },
+        { label: 'Canvas', detail: 'shared pixel pipeline' },
+        { label: 'Tools', detail: 'three utilities', sub: ['photo grid', 'bill splitter', 'image tools'] },
+        { label: 'Server', detail: 'upload + queue', blocked: true },
+        { label: 'Export', detail: 'local result' },
+      ],
+      specs: [
+        { k: 'Resolution', v: '4K' },
+        { k: 'Uploads', v: '0' },
+        { k: 'Build cycle', v: '-40%' },
+      ],
+    },
     diagramTitle: 'Local-first flow',
     diagram: [
       'User drops a 4K image into the tool',

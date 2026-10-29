@@ -6,10 +6,6 @@ import StatementStrip from './components/StatementStrip';
 import WorkIndex from './components/WorkIndex';
 import Marquee from './components/Marquee';
 import ProjectChapter from './components/ProjectChapter';
-import GatewayVisual from './components/GatewayVisual';
-import DigitVisual from './components/DigitVisual';
-import DashVisual from './components/DashVisual';
-import ToolsVisual from './components/ToolsVisual';
 import SkillsIndex from './components/SkillsIndex';
 import About from './components/About';
 import Journey from './components/Journey';
@@ -30,12 +26,6 @@ export default function App() {
   // reduced motion so the browser's native scrolling is untouched.
   useEffect(() => initSmoothScroll(reduced), [reduced]);
 
-  const visuals = [
-    <GatewayVisual key="v0" reduced={reduced} />,
-    <DigitVisual key="v1" reduced={reduced} />,
-    <DashVisual key="v2" reduced={reduced} />,
-    <ToolsVisual key="v3" reduced={reduced} />,
-  ];
   const dark = [false, true, false, true];
 
   // Deep links on first load: the browser scrolls before React mounts
@@ -77,7 +67,6 @@ export default function App() {
               flip={i % 2 === 1}
               dark={dark[i]}
               reduced={reduced}
-              visual={visuals[i]}
             />
           ))}
         </div>
