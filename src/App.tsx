@@ -1,6 +1,7 @@
-import { useEffect } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import Nav from './components/Nav';
 import Hero from './components/Hero';
+import Intro from './components/Intro';
 import ProofStrip from './components/ProofStrip';
 import StatementStrip from './components/StatementStrip';
 import WorkIndex from './components/WorkIndex';
@@ -21,10 +22,20 @@ import { initSmoothScroll, scrollToHash } from './lib/smooth';
 export default function App() {
   const { pref } = useMotionPreference();
   const reduced = pref === 'reduced';
+  const [introOpen, setIntroOpen] = useState(
+    () => typeof window !== 'undefined' && !window.location.hash && pref === 'full'
+  );
+  const closeIntro = useCallback(() => setIntroOpen(false), []);
+  const introVisible = introOpen && !reduced;
 
   // One scroll engine for the whole document. It is destroyed under
-  // reduced motion so the browser's native scrolling is untouched.
-  useEffect(() => initSmoothScroll(reduced), [reduced]);
+  // reduced motion so the browser's native scrolling is untouched. It is
+  // also delayed until the opening cover has cleared, so no wheel input can
+  // move the page behind the cover.
+  useEffect(() => {
+    if (introVisible) return;
+    return initSmoothScroll(reduced);
+  }, [reduced, introVisible]);
 
   const dark = [false, true, false, true];
 
@@ -50,6 +61,7 @@ export default function App() {
 
   return (
     <div className="app">
+      {introVisible ? <Intro onDone={closeIntro} /> : null}
       <a className="skip-link" href="#work">
         Skip to selected work
       </a>

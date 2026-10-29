@@ -45,6 +45,7 @@ portfolio-book/
 │   │   └── smooth.ts           # Lenis mount, anchor scrolling, scroll lock
 │   └── components/
 │       ├── motion.tsx          # Magnetic, Parallax, ScaleIn, Scramble
+│       ├── Intro.tsx           # opening cover, skipped for reduced motion/deep links
 │       ├── Nav.tsx             # sticky nav, progress line, mobile menu dialog
 │       ├── Hero.tsx            # masked headline + scroll-morphing signature line
 │       ├── ProofStrip.tsx      # four evidence blocks with counters
@@ -114,6 +115,11 @@ Canonical, Open Graph, and Twitter URLs point at the live GitHub Pages origin.
   Touch keeps native momentum. Anchors are ordinary links resolved through
   `lib/smooth.ts`, with a mount-time deep-link pass after fonts settle. Under
   `prefers-reduced-motion` Lenis is never mounted and native scrolling returns.
+- **Opening cover.** A short editorial title card (`Intro.tsx`) plays on a
+  normal first load, then lifts away to reveal the hero. Scroll is locked while
+  it is visible and Lenis waits until it clears, so wheel input cannot move the
+  page underneath. Clicking or pressing `Escape` skips it; hash deep links and
+  reduced-motion visits go straight to the page.
 - **One scroll loop.** `lib/scroll.ts` owns a single passive scroll/resize
   listener plus one rAF loop. Every scrubbed effect subscribes; none adds its
   own listener. `lib/reveal.tsx` adds IntersectionObserver reveals and
@@ -183,6 +189,8 @@ Canonical, Open Graph, and Twitter URLs point at the live GitHub Pages origin.
 
 - `npm run build` (tsc + Vite) and `npm run lint` (oxlint) are clean.
 - Chrome production preview: zero console errors and zero failed requests.
+- Opening cover runs at 1440×900 and 375×812, holds page scroll at 0, and
+  click/Escape skips it; deep links and reduced motion never render it.
 - No horizontal overflow at 1440×900, 768×1024, or 375×812.
 - Document height is 11,413 px; the sticky nav stays 67 px at rest and after
   scroll, so anchor targets do not drift.
