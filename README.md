@@ -7,6 +7,8 @@ result.
 
 One visual story runs throughout: **Thought → Structure → System → Result.**
 
+**Live:** https://mayank-rana1.github.io/
+
 ## Stack
 
 - **Vite + React + TypeScript** (fully static build, no server)
@@ -79,14 +81,20 @@ Fully static (`dist/`), deployable anywhere with `base: './'`.
 
 ## Deployment
 
-**GitHub Pages:** `npm run build`, publish `dist/` (e.g. `npx gh-pages -d dist`,
-or a workflow running `npm ci && npm run build`).
+The site is live at **https://mayank-rana1.github.io/**.
 
-**Netlify:** build command `npm run build`, publish directory `dist`.
+Pushes to `main` build and deploy through GitHub Actions
+(`.github/workflows/deploy.yml`): Node 22, `npm ci`, `npm run build`, then the
+`dist/` artifact is published with GitHub Pages. Configure the repository once
+under **Settings → Pages → Build and deployment → Source: GitHub Actions**.
 
-**Vercel:** framework preset “Vite”, build `npm run build`, output `dist`.
+The build is fully static (`dist/`) because `base: './'` emits relative asset
+URLs, so the same output also works on Netlify or Vercel:
 
-Update the `canonical` URL in `index.html` once the final domain is known.
+- **Netlify:** build command `npm run build`, publish directory `dist`.
+- **Vercel:** framework preset “Vite”, build `npm run build`, output `dist`.
+
+Canonical, Open Graph, and Twitter URLs point at the live GitHub Pages origin.
 
 ## Content model — changing information later
 
